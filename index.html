@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8efe2">
+<title>Для тебя ♡ — альбом нашей дружбы</title>
+<style>
+  :root {
+    --paper: #fffaf0;
+    --cream: #f8efe2;
+    --ink: #44352f;
+    --pink: #f4c6cf;
+    --rose: #c75d72;
+    --red: #d94c48;
+    --yellow: #f4d979;
+    --green: #cbd8b8;
+    --blue: #c9dce9;
+    --line: #e8d9c7;
+    --shadow: 0 10px 25px rgba(93, 62, 46, .10);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background-color: var(--cream);
+    background-image: radial-gradient(#d9c8b4 0.65px, transparent 0.65px);
+    background-size: 13px 13px;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+  }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  button:focus-visible, input:focus-visible { outline: 3px solid #8a9fbb; outline-offset: 3px; }
+  .page { width: min(1040px, 100% - 28px); margin: 0 auto; padding: 22px 0 48px; }
+  .top-note {
+    display: flex; justify-content: space-between; gap: 10px; align-items: center;
+    font-size: .76rem; letter-spacing: .09em; text-transform: uppercase; color: #846d5f;
+    padding: 0 5px 14px;
+  }
+  .hero {
+    position: relative; overflow: hidden; text-align: center; padding: clamp(28px, 6vw, 62px) 18px 36px;
+    border: 2px solid var(--ink); border-radius: 7px 18px 8px 16px;
+    background: var(--paper); box-shadow: 7px 7px 0 #d8c6b1;
+  }
+  .hero::before, .hero::after { content: "✦"; position: absolute; font-size: 2rem; color: var(--rose); }
+  .hero::before { left: 7%; top: 12%; transform: rotate(-15deg); }
+  .hero::after { right: 8%; bottom: 12%; transform: rotate(18deg); }
+  .eyebrow { font-size: .75rem; letter-spacing: .18em; text-transform: uppercase; color: var(--rose); font-weight: bold; }
+  h1, h2, h3, .handwritten { font-family: "Segoe Print", "Comic Sans MS", cursive; }
+  h1 { font-size: clamp(2.2rem, 7vw, 4.6rem); line-height: 1.05; margin: 13px 0; font-weight: 800; }
+  h1 span { color: var(--rose); }
+  .hero p { max-width: 520px; margin: 0 auto 22px; line-height: 1.75; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px; padding: 11px 17px; border: 2px solid var(--ink);
+    border-radius: 999px; background: var(--yellow); color: var(--ink); font-weight: 800;
+    box-shadow: 3px 3px 0 var(--ink); transition: transform .15s, box-shadow .15s;
+  }
+  .pill:hover { transform: translate(2px,2px) rotate(-1deg); box-shadow: 1px 1px 0 var(--ink); }
+  .sticker { position: absolute; display: grid; place-items: center; font-size: 1.65rem; width: 53px; height: 53px; border: 1.5px solid var(--ink); border-radius: 50%; box-shadow: 2px 3px 0 var(--ink); }
+  .sticker.star { background: var(--yellow); left: 7%; bottom: 18%; transform: rotate(-13deg); }
+  .sticker.heart { background: var(--pink); right: 7%; top: 17%; transform: rotate(12deg); }
+  .section {
+    margin-top: 30px; padding: clamp(18px, 4vw, 32px); background: var(--paper);
+    border: 2px solid var(--ink); border-radius: 14px 7px 16px 8px; box-shadow: var(--shadow); position: relative;
+  }
+  .section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 7px; }
+  h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.2rem); }
+  .section-intro { margin: 7px 0 20px; line-height: 1.65; color: #725d50; }
+  .tiny-label { font-size: .73rem; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); font-weight: bold; }
+  .upload-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .upload-label, .secondary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px;
+    background: #fff; border: 1.5px dashed #a58b79; border-radius: 10px; font-weight: bold; color: var(--ink);
+  }
+  .upload-label:hover, .secondary:hover { background: #fff0f2; }
+  input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+  .small-hint { font-size: .82rem; color: #8c7768; }
+  .gallery { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px 16px; margin-top: 22px; }
+  .polaroid {
+    min-width: 0; position: relative; padding: 9px 9px 14px; background: white; border: 1px solid #e7dfd4;
+    box-shadow: 2px 5px 12px #6b4d3724; transform: rotate(var(--tilt, -2deg)); transition: transform .2s;
+  }
+  .polaroid:nth-child(3n+2) { --tilt: 2.4deg; }
+  .polaroid:nth-child(3n) { --tilt: -1deg; }
+  .polaroid:hover { transform: rotate(0) translateY(-4px); }
+  .polaroid img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; background: #f3e6d9; }
+  .polaroid .caption { min-height: 26px; padding: 10px 3px 0; text-align: center; font: .9rem "Segoe Print", "Comic Sans MS", cursive; overflow-wrap: anywhere; }
+  .tape { position: absolute; z-index: 2; width: 62px; height: 18px; top: -8px; left: calc(50% - 31px); background: #edcf79bb; transform: rotate(-4deg); }
+  .remove-photo { position: absolute; top: 5px; right: 5px; z-index: 3; width: 27px; height: 27px; border: 0; border-radius: 50%; background: #fffaf0e8; font-weight: bold; }
+  .empty-state { grid-column: 1 / -1; text-align: center; padding: 28px 15px; border: 2px dashed #ddcbbb; border-radius: 12px; color: #927b6a; line-height: 1.7; }
+  .music-box { display: grid; grid-template-columns: 92px minmax(0,1fr); gap: 16px; align-items: center; padding: 16px; background: #f8e3e6; border: 1.5px solid var(--ink); border-radius: 12px; }
+  .album-art { aspect-ratio: 1; display: grid; place-items: center; background: var(--pink); border: 1.5px solid var(--ink); font-size: 2.4rem; transform: rotate(-4deg); box-shadow: 3px 3px 0 var(--ink); }
+  .track-name { font-family: "Segoe Print", "Comic Sans MS", cursive; font-size: 1.15rem; font-weight: bold; overflow-wrap: anywhere; }
+  .track-sub { color: #876a6b; font-size: .85rem; margin: 4px 0 12px; }
+  audio { width: 100%; height: 38px; }
+  .cake-area { text-align: center; padding: 18px 8px 5px; }
+  .cake-instruction { line-height: 1.6; max-width: 480px; margin: 0 auto 15px; }
+  .cake { position: relative; width: min(260px, 80vw); height: 205px; margin: 20px auto 14px; }
+  .cake-plate { position: absolute; bottom: 6px; left: 0; width: 100%; height: 19px; border-radius: 50%; background: #d8d5d0; border: 2px solid var(--ink); }
+  .cake-bottom { position: absolute; bottom: 22px; left: 9%; width: 82%; height: 72px; background: #e8a1ad; border: 2px solid var(--ink); border-radius: 8px 8px 14px 14px; }
+  .cake-bottom::before { content: ""; position: absolute; left: 0; right: 0; top: -9px; height: 19px; background: #fff0dc; border: 2px solid var(--ink); border-radius: 50%; }
+  .cake-top { position: absolute; bottom: 87px; left: 18%; width: 64%; height: 53px; background: #f8c8d0; border: 2px solid var(--ink); border-radius: 9px 9px 5px 5px; }
+  .cake-top::before { content: ""; position: absolute; top: -8px; left: -2px; right: -2px; height: 18px; background: #fff3e2; border: 2px solid var(--ink); border-radius: 50%; }
+  .icing { position: absolute; top: 7px; left: 12%; width: 12px; height: 21px; background: #fff3e2; border-radius: 0 0 9px 9px; box-shadow: 33px 4px #fff3e2, 68px 0 #fff3e2, 102px 5px #fff3e2, 136px 0 #fff3e2; }
+  .candle { position: absolute; z-index: 4; bottom: 133px; width: 13px; height: 39px; border: 1.5px solid var(--ink); border-radius: 4px 4px 2px 2px; background: repeating-linear-gradient(135deg, #fffaf0 0 5px, #d95e73 5px 9px); box-shadow: 1px 2px 0 #8d5260; }
+  .candle::after { content: ""; position: absolute; top: -5px; left: 4px; width: 2px; height: 6px; background: #44352f; border-radius: 2px; }
+  /* Явно задаём положение каждой свечи: так они не «улетают» в сторону. */
+  .candle-one { left: 31%; }
+  .candle-two { left: 48%; }
+  .candle-three { left: 65%; }
+  .flame { position: absolute; top: -21px; left: 1px; width: 10px; height: 16px; background: radial-gradient(ellipse at 50% 65%, #fff5a3 0 24%, #ffbf38 48%, #f07831 78%); border: 1px solid #b96a2b; border-radius: 55% 45% 55% 45%; transform: rotate(8deg); transform-origin: 50% 100%; animation: flicker .55s infinite alternate; box-shadow: 0 0 12px #ffbd48aa; }
+  .flame.out { display: none; }
+  @keyframes flicker { from { transform: rotate(-8deg) scale(.94); } to { transform: rotate(8deg) scale(1.08); } }
+  .cake-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+  .wish-result { min-height: 34px; max-width: 540px; margin: 17px auto 0; font: 1.02rem/1.7 "Segoe Print", "Comic Sans MS", cursive; color: #a94f69; }
+  .wish-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 13px; margin-top: 18px; }
+  .wish-card { min-height: 126px; position: relative; border: 1.5px solid var(--ink); border-radius: 5px 13px 7px 12px; padding: 17px; text-align: left; box-shadow: 3px 4px 0 var(--ink); transition: transform .15s; }
+  .wish-card:nth-child(4n+1) { background: #f7d9df; transform: rotate(-1deg); }
+  .wish-card:nth-child(4n+2) { background: #f5e6a9; transform: rotate(1deg); }
+  .wish-card:nth-child(4n+3) { background: #dce6d0; transform: rotate(1deg); }
+  .wish-card:nth-child(4n) { background: #d8e7ef; transform: rotate(-1deg); }
+  .wish-card:hover { transform: rotate(0) translateY(-3px); }
+  .wish-card .wish-front { font: 1.05rem "Segoe Print", "Comic Sans MS", cursive; }
+  .wish-card .wish-inside { display: none; margin-top: 12px; line-height: 1.6; font-size: .93rem; }
+  .wish-card.open .wish-inside { display: block; }
+  .wish-card.open .wish-front { color: #8d4c5d; }
+  .wish-card .hint { display: block; margin-top: 10px; font-size: .75rem; opacity: .7; }
+  .final-note { background: #fff1d2; border: 1.5px dashed #bd9860; padding: 20px; margin-top: 22px; transform: rotate(.4deg); line-height: 1.8; }
+  .footer { text-align: center; padding: 30px 10px 0; color: #866f61; font: .95rem "Segoe Print", "Comic Sans MS", cursive; }
+  .confetti { position: fixed; z-index: 99; top: -15px; width: 10px; height: 15px; pointer-events: none; animation: fall var(--duration, 3s) linear forwards; }
+  @keyframes fall { to { transform: translate3d(var(--drift, 30px), 110vh, 0) rotate(720deg); opacity: .8; } }
+  .toast { position: fixed; z-index: 100; bottom: 18px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white; border-radius: 99px; padding: 11px 17px; font-size: .9rem; box-shadow: var(--shadow); max-width: calc(100% - 28px); text-align: center; }
+  .hidden { display: none !important; }
+  @media (max-width: 650px) {
+    .page { width: calc(100% - 18px); padding-top: 12px; }
+    .top-note { font-size: .62rem; }
+    .hero { padding: 44px 16px 35px; }
+    .sticker { width: 40px; height: 40px; font-size: 1.2rem; }
+    .sticker.star { left: 4%; bottom: 9%; } .sticker.heart { right: 4%; top: 8%; }
+    .section { margin-top: 20px; padding: 18px 14px; }
+    .gallery { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 18px 12px; }
+    .polaroid { padding: 7px 7px 11px; }
+    .polaroid .caption { font-size: .78rem; }
+    .music-box { grid-template-columns: 65px minmax(0,1fr); gap: 12px; padding: 12px; }
+    .album-art { font-size: 1.8rem; }
+    .track-name { font-size: 1rem; }
+    .wish-grid { gap: 10px; }
+    .wish-card { padding: 13px 11px; min-height: 120px; }
+    .wish-card .wish-front { font-size: .92rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top-note"><span>✂ handmade with love</span><span>выпуск № 001 · только для тебя</span></div>
+
+  <header class="hero">
+    <div class="sticker star">✦</div><div class="sticker heart">♥</div>
+    <div class="eyebrow">маленький альбом большой дружбы</div>
+    <h1>Это всё <span>для тебя Гелечка!</span></h1>
+    <p>Немного наших воспоминаний, немного музыки и очень-очень много любви. Сегодня главная героиня — ты Ангелина! ♡</p>
+    <a class="pill" href="#memories" style="text-decoration:none">Начать сюрприз ↓</a>
+  </header>
+
+  <section class="section" id="memories">
+    <div class="section-title"><h2>Наши моменты 📸</h2><span class="tiny-label">photo dump</span></div>
+    <p class="section-intro">Здесь должны быть самые смешные, милые и совершенно случайные моменты с тобой. Загрузи фотографии — и альбом оживёт!</p>
+    <div class="upload-row">
+      <label class="upload-label" for="photoInput">＋ Добавить фотографии</label>
+      <input id="photoInput" type="file" accept="image/*" multiple>
+      <button class="secondary" id="clearPhotos" type="button">Очистить галерею</button>
+      <span class="small-hint">Можно выбрать сразу несколько фото</span>
+    </div>
+    <div class="gallery" id="gallery" aria-live="polite">
+      <article class="polaroid">
+        <div class="tape" aria-hidden="true"></div>
+        <img src="photos/photo1.jpg" alt="Наше совместное фото" loading="lazy">
+        <div class="caption">мы счатсливые ♡</div>
+      </article>
+      <article class="polaroid">
+        <div class="tape" aria-hidden="true"></div>
+        <img src="photos/photo2.jpg" alt="Наше совместное фото" loading="lazy">
+        <div class="caption">besties forever ✦</div>
+      </article>
+      <article class="polaroid">
+        <div class="tape" aria-hidden="true"></div>
+        <img src="photos/photo3.jpg" alt="Наше совместное фото" loading="lazy">
+        <div class="caption">мы красотки ♡</div>
+      </article>
+      <article class="polaroid">
+        <div class="tape" aria-hidden="true"></div>
+        <img src="photos/photo4.jpg" alt="Наше совместное фото" loading="lazy">
+        <div class="caption">ещё одно старое и такое приятное воспоминание ✧</div>
+      </article>
+      <div class="empty-state hidden" id="emptyPhotos">
+        ♡ Твои фотографии появятся здесь ♡<br>
+        Нажми «Добавить фотографии» и выбери любимые снимки.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="song">
+    <div class="section-title"><h2>Саундтрек для тебя 🎧</h2><span class="tiny-label">press play</span></div>
+    <p class="section-intro">Это раздел с песней, которая ассоциируется у меня с тобой.</p>
+    <div class="music-box" style="grid-template-columns:1fr">
+      <div class="track-name" id="trackName">Stray Kids — CHK CHK BOOM 💥</div>
+      <div class="track-sub" id="trackSub">нажми Play, чтобы включить нашу песню ♡</div>
+      <audio id="audioPlayer" controls preload="metadata" src="song.mp3" style="width:100%;margin:8px 0 12px"></audio>
+      <p style="margin:0;line-height:1.8">
+        Эта песня всегда ассоциируется у меня с тобой. Во-первых, потому что это наши любимые SKZ,
+        а во-вторых — она такая же весёлая, яркая и энергичная, как ты сама!
+        Пусть у тебя всегда будет столько же энергии, поводов улыбаться и моментов,
+        от которых хочется танцевать. 💗 Люблю тебя, еще раз с днем рождения!!!!
+      </p>
+    </div>
+    <p class="small-hint" style="margin-top:12px">
+      Музыка уже прикреплена к подарку ♡ Нажми Play, чтобы слушать.
+    </p>
+  </section>
+
+  <section class="section" id="cakeSection">
+    <div class="section-title"><h2>Загадай желание 🎂</h2><span class="tiny-label">birthday magic</span></div>
+    <p class="section-intro">Торт виртуальный, но мои пожелания тебе — самые настоящие.</p>
+    <div class="cake-area">
+      <p class="cake-instruction">Закрой глаза на секундочку,представь что я рядом и  загадай что-нибудь очень важное и нажми на кнопку, чтобы задуть свечи.</p>
+      <div class="cake" role="img" aria-label="Розовый праздничный торт с тремя свечами">
+        <div class="cake-plate"></div>
+        <div class="cake-bottom"></div>
+        <div class="cake-top"><div class="icing"></div></div>
+        <div class="candle candle-one"><span class="flame"></span></div>
+        <div class="candle candle-two"><span class="flame"></span></div>
+        <div class="candle candle-three"><span class="flame"></span></div>
+      </div>
+      <div class="cake-buttons">
+        <button class="pill" id="blowButton" type="button">Задуть свечи ✨</button>
+        <button class="secondary" id="relightButton" type="button">Зажечь снова</button>
+      </div>
+      <div class="wish-result" id="cakeMessage" aria-live="polite">Пусть хотя бы одно самое заветное желание обязательно сбудется ♡</div>
+    </div>
+  </section>
+
+  <section class="section" id="wishes">
+    <div class="section-title"><h2>Открой, когда… 💌</h2><span class="tiny-label">little notes</span></div>
+    <p class="section-intro">Маленькие записки на разные случаи жизни. Нажимай на карточки, чтобы прочитать послание внутри.</p>
+    <div class="wish-grid">
+      <button class="wish-card" type="button" aria-expanded="false">
+        <span class="wish-front">☁️ Когда тебе грустно</span><span class="hint">нажми, чтобы открыть ↴</span>
+        <span class="wish-inside">Пожалуйста, помни: тебе не обязательно всегда быть сильной. Ты можешь отдыхать, ошибаться и начинать заново. Я на твоей стороне и рядом. Обнимаю крепко-крепко. ♡</span>
+      </button>
+      <button class="wish-card" type="button" aria-expanded="false">
+        <span class="wish-front">🌷 Когда сомневаешься в себе</span><span class="hint">нажми, чтобы открыть ↴</span>
+        <span class="wish-inside">Посмотри на себя моими глазами хотя бы на минутку. Ты способна на большее, чем думаешь, и тебе не нужно заслуживать любовь идеальными результатами. Будь собой. Я в тебя верю! </span>
+      </button>
+      <button class="wish-card" type="button" aria-expanded="false">
+        <span class="wish-front">🍓 Когда скучаешь</span><span class="hint">нажми, чтобы открыть ↴</span>
+        <span class="wish-inside">Обнимаю тебя крепко-крепко, даже если сейчас не могу сделать это лично. Надеюсь, мы ещё много раз будем сидеть рядом, болтать обо всём на свете и смеяться до боли в животе. Люблю наши моменты вместе. ♡</span>
+      </button>
+      <button class="wish-card" type="button" aria-expanded="false">
+        <span class="wish-front">⭐ Просто так</span><span class="hint">нажми, чтобы открыть ↴</span>
+        <span class="wish-inside">Ты важна для меня не только в особенные дни. Я рада, что наши пути пересеклись еще тогда. Пусть в твоей жизни будет много счастья, спокойствия, смеха и людей, рядом с которыми можно быть собой.</span>
+      </button>
+    </div>
+    <div class="final-note">
+      <div class="tiny-label">последняя записка</div>
+      <p class="handwritten" style="font-size:1.12rem;margin-bottom:0">С днём рождения, моя хорошая! Геля, я желаю тебе жизни, в которой будет много поводов улыбаться, смелости идти за мечтами и любви - к себе, к людям и к каждому новому дню. Спасибо тебе за то, что ты есть у меня. Пусть этот год будет к тебе добрым. Люблю тебя! ♡</p>
+    </div>
+  </section>
+
+  <footer class="footer">собрано вручную, с любовью и кучей сердечек ♡<br><span style="font-size:.78rem">P.S. Ты заслуживаешь всего самого прекрасного!!!</span></footer>
+</div>
+
+<div class="toast hidden" id="toast" role="status"></div>
+
+<script>
+  // ФОТОГРАФИИ: выбранные изображения показываются как Polaroid-карточки.
+  const photoInput = document.getElementById('photoInput');
+  const gallery = document.getElementById('gallery');
+  const emptyPhotos = document.getElementById('emptyPhotos');
+  const clearPhotos = document.getElementById('clearPhotos');
+  let photoUrls = [];
+
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.add('hidden'), 2800);
+  }
+
+  function updateEmptyState() {
+    emptyPhotos.classList.toggle('hidden', gallery.querySelectorAll('.polaroid').length > 0);
+  }
+
+  // Кнопки удаления для фотографий, заранее добавленных в сайт.
+  gallery.querySelectorAll('.polaroid').forEach((card) => {
+    const remove = document.createElement('button');
+    remove.className = 'remove-photo';
+    remove.type = 'button';
+    remove.textContent = '×';
+    remove.setAttribute('aria-label', 'Удалить фотографию');
+    remove.addEventListener('click', () => {
+      card.remove();
+      updateEmptyState();
+    });
+    card.appendChild(remove);
+  });
+  updateEmptyState();
+
+  photoInput.addEventListener('change', (event) => {
+    const files = Array.from(event.target.files || []);
+    files.forEach((file) => {
+      if (!file.type.startsWith('image/')) return;
+      const url = URL.createObjectURL(file);
+      photoUrls.push(url);
+
+      const card = document.createElement('article');
+      card.className = 'polaroid';
+
+      const tape = document.createElement('div');
+      tape.className = 'tape';
+      tape.setAttribute('aria-hidden', 'true');
+
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'Фотография из нашего альбома';
+      img.loading = 'lazy';
+
+      const caption = document.createElement('div');
+      caption.className = 'caption';
+      caption.textContent = file.name.replace(/\.[^.]+$/, '').replace(/[_-]/g, ' ') || 'любимый момент ♡';
+
+      const remove = document.createElement('button');
+      remove.className = 'remove-photo';
+      remove.type = 'button';
+      remove.textContent = '×';
+      remove.setAttribute('aria-label', 'Удалить фотографию');
+      remove.addEventListener('click', () => {
+        URL.revokeObjectURL(url);
+        photoUrls = photoUrls.filter((item) => item !== url);
+        card.remove();
+        updateEmptyState();
+      });
+
+      card.append(tape, img, remove, caption);
+      gallery.appendChild(card);
+    });
+    updateEmptyState();
+    if (files.length) showToast('Фотографии добавлены в альбом ♡');
+    // Очищаем input, чтобы можно было выбрать те же файлы повторно.
+    photoInput.value = '';
+  });
+
+  clearPhotos.addEventListener('click', () => {
+    photoUrls.forEach((url) => URL.revokeObjectURL(url));
+    photoUrls = [];
+    gallery.querySelectorAll('.polaroid').forEach((card) => card.remove());
+    updateEmptyState();
+    showToast('Галерея очищена');
+  });
+
+  // МУЗЫКА: выбранный аудиофайл подключается к стандартному плееру браузера.
+
+
+  // ТОРТИК: задуваем/зажигаем свечи и запускаем конфетти.
+  const flames = Array.from(document.querySelectorAll('.flame'));
+  const cakeMessage = document.getElementById('cakeMessage');
+  const blowButton = document.getElementById('blowButton');
+  const relightButton = document.getElementById('relightButton');
+  let candlesOut = false;
+
+  function makeConfetti() {
+    const colors = ['#d94c48', '#f4d979', '#f4c6cf', '#cbd8b8', '#c9dce9', '#c75d72'];
+    for (let i = 0; i < 95; i++) {
+      const piece = document.createElement('i');
+      piece.className = 'confetti';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      piece.style.setProperty('--duration', (2.1 + Math.random() * 2.4) + 's');
+      piece.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
+      piece.style.animationDelay = (Math.random() * .5) + 's';
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 5200);
+    }
+  }
+
+  blowButton.addEventListener('click', () => {
+    if (candlesOut) {
+      cakeMessage.textContent = 'Свечки уже задуты — желание отправилось во Вселенную! ✨';
+      return;
+    }
+    flames.forEach((flame) => flame.classList.add('out'));
+    candlesOut = true;
+    cakeMessage.textContent = 'УРААА! 🎉 Пусть твоё желание сбудется, а впереди будет целый год маленьких чудес. С днём рождения! ♡';
+    makeConfetti();
+  });
+
+  relightButton.addEventListener('click', () => {
+    flames.forEach((flame) => flame.classList.remove('out'));
+    candlesOut = false;
+    cakeMessage.textContent = 'Свечки снова горят! Загадай желание и попробуй ещё раз ♡';
+  });
+
+  // СЕКРЕТНЫЕ ПОЖЕЛАНИЯ: каждая карточка раскрывается по нажатию.
+  document.querySelectorAll('.wish-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const isOpen = card.classList.toggle('open');
+      card.setAttribute('aria-expanded', String(isOpen));
+      const hint = card.querySelector('.hint');
+      if (hint) hint.textContent = isOpen ? 'нажми, чтобы закрыть ↑' : 'нажми, чтобы открыть ↴';
+    });
+  });
+</script>
+</body>
+</html>
